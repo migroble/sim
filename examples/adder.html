@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+  </head>
+  <body>
+    <script type="module">
+      import init, { Sim, Xor, And, Or, MetaComponent } from '/pkg/sim_rs.js';
+
+      async function run() {
+        await init();
+
+        let s = new Sim();
+
+        function createHalfAdder(s) {
+            let xor = s.add_component(new Xor());
+            let and = s.add_component(new And());
+
+            s.connect(xor, 1, and, 1);
+            s.connect(xor, 2, and, 2);
+
+            // a, b, sum, c
+            return new MetaComponent([xor, 1, xor, 2, xor, 3, and, 3]);
+        }
+
+        let h1 = createHalfAdder(s);
+        let h2 = createHalfAdder(s);
+        let or = s.add_component(new Or());
+
+        s.connect(...h1.pin(3), ...h2.pin(2));
+        s.connect(...h2.pin(4), or, 1);
+        s.connect(...h1.pin(4), or, 2);
+
+        // a, b, cin, sum, cout
+        let f = new MetaComponent([...h1.pin(1), ...h1.pin(2), ...h2.pin(1), ...h2.pin(3), or, 3]);
+
+        console.log(s.read(...f.pin(4)), s.read(...f.pin(5)));
+        s.write(...f.pin(1), true);
+        console.log(s.read(...f.pin(4)), s.read(...f.pin(5)));
+        s.write(...f.pin(2), true);
+        console.log(s.read(...f.pin(4)), s.read(...f.pin(5)));
+        s.write(...f.pin(3), true);
+        console.log(s.read(...f.pin(4)), s.read(...f.pin(5)));
+      }
+
+      run();
+    </script>
+  </body>
+</html>

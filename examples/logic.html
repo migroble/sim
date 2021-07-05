@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    </head>
+    <body>
+        <script type="module">
+            import init, { Sim, Xor, And, Or, Not, MetaComponent } from '/pkg/sim_rs.js';
+
+            async function run() {
+                await init();
+
+                let s = new Sim();
+
+                let and1 = s.add_component(new And());
+                let not1 = s.add_component(new Not());
+                let or = s.add_component(new Or());
+                let and2 = s.add_component(new And());
+                let not2 = s.add_component(new Not());
+
+                s.connect(and1, 3, or, 1);
+                s.connect(not1, 2, or, 2);
+                s.connect(or, 3, and2, 1);
+                s.connect(and2, 3, not2, 1);
+            }
+
+            run();
+        </script>
+    </body>
+    </html>

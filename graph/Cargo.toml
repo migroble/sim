@@ -1,0 +1,9 @@
+[package]
+name = "graph"
+version = "0.1.0"
+authors = ["Miguel \"Peppermint\" Robledo <migroble@ucm.es>"]
+edition = "2018"
+
+[dependencies]
+k2_tree = "0.5"
+fnv = "1.0"
